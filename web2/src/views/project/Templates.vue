@@ -31,7 +31,7 @@
       title="New Task"
       @save="onTaskCreated"
     >
-      <template v-slot:title={}>
+      <template v-slot:title="{}">
         <span class="breadcrumbs__item">{{ templateAlias }}</span>
         <v-icon>mdi-chevron-right</v-icon>
         <span class="breadcrumbs__item">New Task</span>
@@ -54,11 +54,9 @@
       <v-app-bar-nav-icon @click="showDrawer()"></v-app-bar-nav-icon>
       <v-toolbar-title>Task Templates</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn
-        color="primary"
-        @click="editItem('new')"
-        class="mr-1"
-      >New template</v-btn>
+      <v-btn color="primary" @click="editItem('new')" class="mr-1"
+        >New template</v-btn
+      >
 
       <v-btn icon @click="settingsSheet = true"><v-icon>mdi-cog</v-icon></v-btn>
     </v-toolbar>
@@ -93,7 +91,12 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-btn text color="black" class="pl-1 pr-2" @click="createTask(item.id)">
+        <v-btn
+          text
+          color="black"
+          class="pl-1 pr-2"
+          @click="createTask(item.id)"
+        >
           <v-icon class="pr-1">mdi-play</v-icon>
           Run
         </v-btn>
@@ -110,12 +113,12 @@
 </template>
 
 <script>
-import ItemListPageBase from '@/components/ItemListPageBase';
-import TemplateForm from '@/components/TemplateForm.vue';
-import axios from 'axios';
-import TaskForm from '@/components/TaskForm.vue';
-import TableSettingsSheet from '@/components/TableSettingsSheet.vue';
-import EventBus from '@/event-bus';
+import ItemListPageBase from "@/components/ItemListPageBase";
+import TemplateForm from "@/components/TemplateForm.vue";
+import axios from "axios";
+import TaskForm from "@/components/TaskForm.vue";
+import TableSettingsSheet from "@/components/TableSettingsSheet.vue";
+import EventBus from "@/event-bus";
 
 export default {
   components: { TemplateForm, TaskForm, TableSettingsSheet },
@@ -138,24 +141,26 @@ export default {
 
   computed: {
     templateAlias() {
-      if (this.itemId == null || this.itemId === 'new') {
-        return '';
+      if (this.itemId == null || this.itemId === "new") {
+        return "";
       }
       return this.items.find((x) => x.id === this.itemId).alias;
     },
 
     isLoaded() {
-      return this.items
-        && this.keys
-        && this.inventory
-        && this.environment
-        && this.repositories;
+      return (
+        this.items &&
+        this.keys &&
+        this.inventory &&
+        this.environment &&
+        this.repositories
+      );
     },
   },
 
   methods: {
     onTaskCreated(e) {
-      EventBus.$emit('i-show-task', {
+      EventBus.$emit("i-show-task", {
         taskId: e.item.id,
       });
     },
@@ -168,39 +173,39 @@ export default {
     getHeaders() {
       return [
         {
-          text: 'Alias',
-          value: 'alias',
+          text: "Alias",
+          value: "alias",
         },
         {
-          text: 'Playbook',
-          value: 'playbook',
+          text: "Playbook",
+          value: "playbook",
           sortable: false,
         },
         {
-          text: 'SSH key',
-          value: 'ssh_key_id',
+          text: "SSH key",
+          value: "ssh_key_id",
           sortable: false,
         },
         {
-          text: 'Inventory',
-          value: 'inventory_id',
+          text: "Inventory",
+          value: "inventory_id",
           sortable: false,
         },
         {
-          text: 'Environment',
-          value: 'environment_id',
+          text: "Environment",
+          value: "environment_id",
           sortable: false,
         },
         {
-          text: 'Repository',
-          value: 'repository_id',
+          text: "Repository",
+          value: "repository_id",
           sortable: false,
         },
         {
-          text: 'Actions',
-          value: 'actions',
+          text: "Actions",
+          value: "actions",
           sortable: false,
-          width: '0%',
+          width: "0%",
         },
       ];
     },
@@ -210,29 +215,37 @@ export default {
     },
 
     async loadData() {
-      this.inventory = (await axios({
-        method: 'get',
-        url: `/api/project/${this.projectId}/inventory`,
-        responseType: 'json',
-      })).data;
+      this.inventory = (
+        await axios({
+          method: "get",
+          url: `/api/project/${this.projectId}/inventory`,
+          responseType: "json",
+        })
+      ).data;
 
-      this.environment = (await axios({
-        method: 'get',
-        url: `/api/project/${this.projectId}/environment`,
-        responseType: 'json',
-      })).data;
+      this.environment = (
+        await axios({
+          method: "get",
+          url: `/api/project/${this.projectId}/environment`,
+          responseType: "json",
+        })
+      ).data;
 
-      this.keys = (await axios({
-        method: 'get',
-        url: `/api/project/${this.projectId}/keys`,
-        responseType: 'json',
-      })).data;
+      this.keys = (
+        await axios({
+          method: "get",
+          url: `/api/project/${this.projectId}/keys`,
+          responseType: "json",
+        })
+      ).data;
 
-      this.repositories = (await axios({
-        method: 'get',
-        url: `/api/project/${this.projectId}/repositories`,
-        responseType: 'json',
-      })).data;
+      this.repositories = (
+        await axios({
+          method: "get",
+          url: `/api/project/${this.projectId}/repositories`,
+          responseType: "json",
+        })
+      ).data;
     },
 
     onTableSettingsChange({ headers }) {
